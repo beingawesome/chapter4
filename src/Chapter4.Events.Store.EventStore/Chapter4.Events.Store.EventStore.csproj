@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chapter4.Events.Store\Chapter4.Events.Store.csproj" />
+    <ProjectReference Include="..\Chapter4.EventStore\Chapter4.EventStore.csproj" />
+  </ItemGroup>
+
+</Project>

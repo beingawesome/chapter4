@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventStore.ClientAPI.NetCore" Version="4.0.3-rc" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chapter4.Events\Chapter4.Events.csproj" />
+    <ProjectReference Include="..\Chapter4.Metadata.Dynamic\Chapter4.Metadata.Dynamic.csproj" />
+    <ProjectReference Include="..\Chapter4.Versioning\Chapter4.Versioning.csproj" />
+  </ItemGroup>
+
+</Project>
