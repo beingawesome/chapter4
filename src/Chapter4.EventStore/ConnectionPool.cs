@@ -21,7 +21,7 @@ namespace Chapter4.EventStore
         {
             var connection = EventStoreConnection.Create(connectionString);
 
-            await connection.ConnectAsync();
+            await connection.ConnectAsync().ConfigureAwait(false);
 
             return connection;
         }

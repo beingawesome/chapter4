@@ -26,23 +26,23 @@ namespace Chapter4.EventSourcing
             where T : AggregateRoot
         {
             var type = typeof(T).FullName;
-            var snapshot = await Snapshots.GetLatestSnapshot(type, id);
+            var snapshot = await Snapshots.GetLatestSnapshot(type, id).ConfigureAwait(false);
             var version = snapshot?.Version ?? AggregateRoot.InitialVersion;
 
-            var events = await Events.GetEventsAsync(type, id, version + 1) ?? Enumerable.Empty<Event>();
+            var events = await Events.GetEventsAsync(type, id, version + 1).ConfigureAwait(false) ?? Enumerable.Empty<Event>();
 
             if (snapshot == null && events.IsNullOrEmpty())
             {
                 return null;
             }
 
-            return await Builder.BuildAsync<T>(id, version, snapshot?.Snapshot, events);
+            return await Builder.BuildAsync<T>(id, version, snapshot?.Snapshot, events).ConfigureAwait(false);
         }
 
         public virtual async Task<Commit> SaveAsync<T>(T aggregate)
             where T : AggregateRoot
         {
-            var version = await Events.SaveAsync(typeof(T).FullName, aggregate.Id, aggregate.Proxy.Version, aggregate.Proxy.Uncommitted);
+            var version = await Events.SaveAsync(typeof(T).FullName, aggregate.Id, aggregate.Proxy.Version, aggregate.Proxy.Uncommitted).ConfigureAwait(false);
 
             aggregate.Proxy.Commit();
 

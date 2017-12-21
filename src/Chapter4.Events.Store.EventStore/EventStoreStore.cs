@@ -22,7 +22,7 @@ namespace Chapter4.Events.Store.EventStore
         // TODO: should i to list?
         public async Task<IEnumerable<Event>> GetEventsAsync(string aggregate, string id, long start)
         {
-            return (await _connection.Read(aggregate, id, start)).Select(x => x.Event);
+            return (await _connection.Read(aggregate, id, start).ConfigureAwait(false)).Select(x => x.Event);
         }
 
         public Task<Commit> SaveAsync(string aggregate, string id, long expectedVersion, IEnumerable<Event> events)

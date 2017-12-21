@@ -24,7 +24,7 @@ namespace Chapter4.EventStore
 
         public async Task CatchUp(Action<EventDescriptor> callback)
         {
-            var connection = await EnsureConnectionAsync();
+            var connection = await EnsureConnectionAsync().ConfigureAwait(false);
 
             var subscription = connection.SubscribeToAllFrom(null, CatchUpSubscriptionSettings.Default, (s, r) => OnEvent(r, callback));
 
@@ -33,16 +33,16 @@ namespace Chapter4.EventStore
 
         public async Task Live(Action<EventDescriptor> callback)
         {
-            var connection = await EnsureConnectionAsync();
+            var connection = await EnsureConnectionAsync().ConfigureAwait(false);
 
-            var subscription = await connection.SubscribeToAllAsync(false, (s, r) => OnEvent(r, callback));
+            var subscription = await connection.SubscribeToAllAsync(false, (s, r) => OnEvent(r, callback)).ConfigureAwait(false);
 
             _disposables.Add(subscription);
         }
 
         public async Task<IEnumerable<EventDescriptor>> Read(string aggregate, string id, long start)
         {
-            var connection = await EnsureConnectionAsync();
+            var connection = await EnsureConnectionAsync().ConfigureAwait(false);
             var stream = GetStream(aggregate, id);
             var result = Enumerable.Empty<EventDescriptor>();
 
@@ -51,7 +51,7 @@ namespace Chapter4.EventStore
 
             do
             {
-                slice = await connection.ReadStreamEventsForwardAsync(stream, current, PageSize, false);
+                slice = await connection.ReadStreamEventsForwardAsync(stream, current, PageSize, false).ConfigureAwait(false);
 
                 current = slice.NextEventNumber;
 
@@ -66,11 +66,11 @@ namespace Chapter4.EventStore
 
         public async Task<Commit> Save(string aggregate, string id, long expectedVersion, IEnumerable<EventDescriptor> events)
         {
-            var connection = await EnsureConnectionAsync();
+            var connection = await EnsureConnectionAsync().ConfigureAwait(false);
             var stream = GetStream(aggregate, id);
             var data = events.Select(x => _serializer.Serialize(x));
 
-            var result = await connection.AppendToStreamAsync(stream, expectedVersion, data);
+            var result = await connection.AppendToStreamAsync(stream, expectedVersion, data).ConfigureAwait(false);
 
             return new Commit(result.LogPosition.CommitPosition, result.LogPosition.PreparePosition);
         }
@@ -107,7 +107,7 @@ namespace Chapter4.EventStore
 
             if (!connection.IsCompleted)
             {
-                await connection;
+                await connection.ConfigureAwait(false);
             }
 
             return connection.Result;
