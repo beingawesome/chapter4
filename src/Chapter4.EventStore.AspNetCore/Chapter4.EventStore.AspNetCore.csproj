@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chapter4.Events.Handlers\Chapter4.Events.Handlers.csproj" />
     <ProjectReference Include="..\Chapter4.EventStore\Chapter4.EventStore.csproj" />
   </ItemGroup>
 
