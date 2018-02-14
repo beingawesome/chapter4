@@ -28,9 +28,9 @@ namespace Chapter4.EntityFrameworkCore
 
         protected virtual void ApplyAll(IReadOnlyMetadata metadata) { }
 
-        private class TypeCache<T> : ConcurrentDictionary<Type, HandlerCache>
+        private class TypeCache<TObj> : ConcurrentDictionary<Type, HandlerCache>
         {
-            private Type Interface = typeof(T);
+            private Type Interface = typeof(TObj);
 
             public MethodInfo GetHandler(Type aggregate, Type target)
             {
