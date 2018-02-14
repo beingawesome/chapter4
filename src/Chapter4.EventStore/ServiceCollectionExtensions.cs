@@ -17,6 +17,7 @@ namespace Chapter4.EventStore
         public static IServiceCollection AddEventStoreEventStore(this IServiceCollection services, string connectionString)
         {
             services.AddEventStore();
+            services.TryAddSingleton< EventMetadataFactory>();
             services.TryAddTransient(s => GetEventStore(s, connectionString));
 
             return services;
@@ -24,7 +25,7 @@ namespace Chapter4.EventStore
 
         private static IEventStore GetEventStore(IServiceProvider services, string connectionString)
         {
-            var metadata = services.GetRequiredService<IEventMetadataFactory>();
+            var metadata = services.GetRequiredService<EventMetadataFactory>();
             var builder = services.GetRequiredService<ConnectionBuilder>();
             var connection = builder.Build(connectionString);
 

@@ -4,7 +4,7 @@ Get-ChildItem . -recurse -Filter *.csproj |
 Foreach-Object {
     $file = $_.FullName
 
-    Get-Content $file | % { $_ -replace "<Version>(.+)</Version>", "<Version>$vnext</Version>" } | Set-Content -Path $file
+    (Get-Content $file) | ForEach-Object { $_ -replace "<Version>(.+)</Version>", "<Version>$vnext</Version>" } | Set-Content -Path $file
 }
 
 $root = Get-Location
