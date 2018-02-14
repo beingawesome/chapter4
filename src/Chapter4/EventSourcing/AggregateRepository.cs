@@ -25,10 +25,11 @@ namespace Chapter4.EventSourcing
         public virtual async Task<T> GetByIdAsync<T>(string id)
             where T : AggregateRoot
         {
-            var snapshot = await Snapshots.GetLatestSnapshot<T>(id).ConfigureAwait(false);
+            var type = typeof(T).FullName;
+            var snapshot = await Snapshots.GetLatestSnapshot<T>(type, id).ConfigureAwait(false);
             var version = snapshot?.Version ?? AggregateRoot.InitialVersion;
 
-            var events = await Events.GetEventsAsync<T>(id, version + 1).ConfigureAwait(false) ?? Enumerable.Empty<Event>();
+            var events = await Events.GetEventsAsync<T>(type, id, version + 1).ConfigureAwait(false) ?? Enumerable.Empty<Event>();
 
             if (snapshot == null && events.IsNullOrEmpty())
             {
@@ -41,7 +42,8 @@ namespace Chapter4.EventSourcing
         public virtual async Task<Commit> SaveAsync<T>(T aggregate)
             where T : AggregateRoot
         {
-            var version = await Events.SaveAsync<T>(aggregate.Id, aggregate.Proxy.Version, aggregate.Proxy.Uncommitted).ConfigureAwait(false);
+            var type = typeof(T).FullName;
+            var version = await Events.SaveAsync<T>(type, aggregate.Id, aggregate.Proxy.Version, aggregate.Proxy.Uncommitted).ConfigureAwait(false);
 
             aggregate.Proxy.Commit();
 
